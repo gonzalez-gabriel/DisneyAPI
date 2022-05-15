@@ -1,8 +1,20 @@
+const Movie = require('../models/MovieModel');
 const characterController = (Character) => {
   //GET CHARACTERS
   const getCharacters = async (req, res) => {
     try {
-      const response = await Character.findAll();
+      const response = await Character.findAll({
+        include: [
+          {
+            model: Movie,
+            as: 'movies',
+            attributes: ['title', 'rate'],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
       const data = response.map((character) => character.dataValues);
       res.status(200).json(data);
     } catch (err) {
@@ -12,8 +24,17 @@ const characterController = (Character) => {
   //POST CHARACTER
   const postCharacter = async (req, res) => {
     const { body } = req;
+    const { movies } = body;
     try {
       const response = await Character.create(body);
+
+      const listOfMovies = await Movie.findAll();
+
+      listOfMovies.forEach(async (movie) => {
+        if (movies.includes(movie.dataValues.title)) {
+          await response.addMovie(movie);
+        }
+      });
       res.status(200).json(response);
     } catch (err) {
       console.log(err.message);
