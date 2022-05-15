@@ -1,25 +1,25 @@
 const { Sequelize } = require('sequelize');
+const sequelize = require('../database');
 
-const model = (sequelize) => {
-  const genre = sequelize.define(
-    'genre',
-    {
-      id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true,
-        allowNull: false,
-      },
-      image_url: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
+// const model = (sequelize) => {
+const Genre = sequelize.define(
+  'genre',
+  {
+    genreId: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-      timestamps: false,
-    }
-  );
-  return genre;
-};
+    image_url: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+// return genre;
+// };
 
-module.exports = model;
+module.exports = Genre;

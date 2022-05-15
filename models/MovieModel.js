@@ -1,37 +1,37 @@
 const { Sequelize } = require('sequelize');
+const sequelize = require('../database');
 
-const model = (sequelize) => {
-  const movie = sequelize.define(
-    'movie',
-    {
-      id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true,
-        allowNull: false,
-      },
-      image_url: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      rate: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      created_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
+// const model = (sequelize) => {
+const Movie = sequelize.define(
+  'movie',
+  {
+    movieId: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    {
-      timestamps: false,
-    }
-  );
-  return movie;
-};
+    image_url: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    title: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    rate: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      allowNull: false,
+    },
+  },
+  {
+    timestamps: false,
+  }
+);
+// return movie;
+// };
 
-module.exports = model;
+module.exports = Movie;
