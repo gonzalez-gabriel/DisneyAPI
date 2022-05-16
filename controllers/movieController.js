@@ -1,4 +1,5 @@
 const Character = require('../models/CharacterModel');
+const Genre = require('../models/GenreModel');
 
 const movieController = (Movie) => {
   //GET MOVIES
@@ -9,6 +10,14 @@ const movieController = (Movie) => {
           {
             model: Character,
             as: 'characters',
+            attributes: ['name'],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Genre,
+            as: 'genres',
             attributes: ['name'],
             through: {
               attributes: [],
@@ -25,15 +34,21 @@ const movieController = (Movie) => {
   //POST MOVIES
   const postMovie = async (req, res) => {
     const { body } = req;
-    const { characters } = body;
+    const { characters, genres } = body;
     try {
       const response = await Movie.create(body);
 
       const listOfCharacters = await Character.findAll();
+      const genresDB = await Genre.findAll();
 
       listOfCharacters.forEach(async (character) => {
         if (characters.includes(character.dataValues.name)) {
           await response.addCharacter(character);
+        }
+      });
+      genresDB.forEach(async (genre) => {
+        if (genres.includes(genre.dataValues.name)) {
+          await response.addGenre(genre);
         }
       });
       res.status(200).json(response);
@@ -46,7 +61,7 @@ const movieController = (Movie) => {
     const { params, body } = req;
     try {
       const response = await Movie.update(body, {
-        where: { id: params.id },
+        where: { movieId: params.id },
       });
       res.status(200).json(response);
     } catch (err) {
@@ -57,7 +72,7 @@ const movieController = (Movie) => {
   const deleteMovieById = async (req, res) => {
     const { params } = req;
     try {
-      const response = await Movie.destroy({ where: { id: params.id } });
+      const response = await Movie.destroy({ where: { movieId: params.id } });
       res.status(200).json(response);
     } catch (err) {
       console.log(err.message);

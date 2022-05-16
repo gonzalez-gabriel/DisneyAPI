@@ -1,11 +1,11 @@
 const { Sequelize } = require('sequelize');
 const sequelize = require('../database');
 
-// const model = (sequelize) => {
-const Genre = sequelize.define(
-  'genre',
+// module.exports = (sequelize) => {
+const User = sequelize.define(
+  'user',
   {
-    genreId: {
+    userId: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -14,7 +14,15 @@ const Genre = sequelize.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    image_url: {
+    username: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    password: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -23,7 +31,7 @@ const Genre = sequelize.define(
     timestamps: false,
   }
 );
-// return genre;
+// return character;
 // };
 
-module.exports = Genre;
+module.exports = User;

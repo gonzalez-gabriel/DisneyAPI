@@ -1,19 +1,26 @@
 const Movie = require('../models/MovieModel');
+const { Op } = require('sequelize');
+
 const characterController = (Character) => {
   //GET CHARACTERS
   const getCharacters = async (req, res) => {
+    const { age } = req.query;
     try {
+      // const response = await Character.findAll({
+      //   include: [
+      //     {
+      //       model: Movie,
+      //       as: 'movies',
+      //       attributes: ['title', 'rate'],
+      //       through: {
+      //         attributes: [],
+      //       },
+      //     },
+      //   ],
+      // });
       const response = await Character.findAll({
-        include: [
-          {
-            model: Movie,
-            as: 'movies',
-            attributes: ['title', 'rate'],
-            through: {
-              attributes: [],
-            },
-          },
-        ],
+        attributes: ['name'],
+        where: { age: age },
       });
       const data = response.map((character) => character.dataValues);
       res.status(200).json(data);
@@ -25,6 +32,7 @@ const characterController = (Character) => {
   const postCharacter = async (req, res) => {
     const { body } = req;
     const { movies } = body;
+    console.log(body);
     try {
       const response = await Character.create(body);
 
@@ -45,7 +53,7 @@ const characterController = (Character) => {
     const { params, body } = req;
     try {
       const response = await Character.update(body, {
-        where: { id: params.id },
+        where: { characterId: params.id },
       });
       res.status(200).json(response);
     } catch (err) {
@@ -56,7 +64,9 @@ const characterController = (Character) => {
   const deleteCharacterById = async (req, res) => {
     const { params } = req;
     try {
-      const response = await Character.destroy({ where: { id: params.id } });
+      const response = await Character.destroy({
+        where: { characterId: params.id },
+      });
       res.status(200).json(response);
     } catch (err) {
       console.log(err.message);
