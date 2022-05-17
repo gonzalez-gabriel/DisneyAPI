@@ -9,13 +9,15 @@ const routes = (Character) => {
     postCharacter,
     putCharacterById,
     deleteCharacterById,
+    characterDetailsById,
   } = characterController(Character);
   characterRouter.route('/characters').post(postCharacter).get(getCharacters);
 
   characterRouter
     .route('/characters/:id')
     .put(putCharacterById)
-    .delete(deleteCharacterById);
+    .delete(deleteCharacterById)
+    .get(characterDetailsById);
 
   return characterRouter;
 };

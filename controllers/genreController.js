@@ -28,9 +28,9 @@ const genreController = (Genre) => {
     try {
       const response = await Genre.create(body);
 
-      const movieDB = await Movie.findAll();
+      const moviesDB = await Movie.findAll();
 
-      movieDB.forEach(async (movie) => {
+      moviesDB.forEach(async (movie) => {
         if (movies.includes(movie.dataValues.title)) {
           await response.addMovie(movie);
         }

@@ -3,28 +3,37 @@ const Genre = require('../models/GenreModel');
 
 const movieController = (Movie) => {
   //GET MOVIES
-  const getMovies = async (_, res) => {
+  const getMovies = async (req, res) => {
+    const key = Object.keys(req.query)[0];
+    const value = Object.values(req.query)[0];
     try {
       const response = await Movie.findAll({
-        include: [
-          {
-            model: Character,
-            as: 'characters',
-            attributes: ['name'],
-            through: {
-              attributes: [],
-            },
-          },
-          {
-            model: Genre,
-            as: 'genres',
-            attributes: ['name'],
-            through: {
-              attributes: [],
-            },
-          },
-        ],
+        attributes: ['image_url', 'title', 'created_at'],
       });
+      // switch (key) {
+      //   case 'title':
+      //   case 'genre':
+      // }
+      // const response = await Movie.findAll({
+      //   include: [
+      //     {
+      //       model: Character,
+      //       as: 'characters',
+      //       attributes: ['name'],
+      //       through: {
+      //         attributes: [],
+      //       },
+      //     },
+      //     {
+      //       model: Genre,
+      //       as: 'genres',
+      //       attributes: ['name'],
+      //       through: {
+      //         attributes: [],
+      //       },
+      //     },
+      //   ],
+      // });
       const data = response.map((movie) => movie.dataValues);
       res.status(200).json(data);
     } catch (err) {
@@ -79,11 +88,34 @@ const movieController = (Movie) => {
     }
   };
 
+  //MOVIE DETAILS WITH CHARACTERS
+  const movieDetailsById = async (req, res) => {
+    const { params } = req;
+    try {
+      const response = await Movie.findOne({
+        where: { movieId: params.id },
+        include: [
+          {
+            model: Character,
+            as: 'characters',
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+      res.status(200).json(response);
+    } catch (err) {
+      res.status(500).json(err.message);
+    }
+  };
+
   return {
     getMovies,
     postMovie,
     putMovieById,
     deleteMovieById,
+    movieDetailsById,
   };
 };
 
