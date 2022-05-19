@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
 // const model = (sequelize) => {
@@ -6,24 +6,24 @@ const Movie = sequelize.define(
   'movie',
   {
     movieId: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
     image_url: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     title: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     rate: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     created_at: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
