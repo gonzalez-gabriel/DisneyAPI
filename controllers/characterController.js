@@ -48,7 +48,7 @@ const characterController = (Character) => {
         }
       }
     } catch (err) {
-      res.status(500).json('Error');
+      res.status(500).json(err.message);
     }
   };
   //POST CHARACTER
@@ -134,7 +134,7 @@ const characterController = (Character) => {
       });
       res.status(200).json(response);
     } catch (err) {
-      res.status(500).json('Error');
+      res.status(500).json(err.message);
     }
   };
 

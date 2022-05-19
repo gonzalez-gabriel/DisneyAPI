@@ -7,10 +7,6 @@ const movieController = (Movie) => {
     const key = Object.keys(req.query)[0];
     const value = Object.values(req.query)[0];
     try {
-      const response = await Movie.findAll({
-        attributes: ['movieId', 'image_url', 'title', 'created_at'],
-        order: [['created_at', 'DESC']],
-      });
       switch (key) {
         case 'title': {
           const response = await Movie.findAll({
@@ -24,11 +20,11 @@ const movieController = (Movie) => {
         case 'genre': {
           const response = await Movie.findAll({
             attributes: ['movieId', 'image_url', 'title', 'created_at'],
-            includes: [
+            include: [
               {
                 model: Genre,
                 as: 'genres',
-                where: { genreId: value },
+                where: { genreId: value ?? null },
                 through: {
                   attributes: [],
                 },
@@ -49,11 +45,13 @@ const movieController = (Movie) => {
           break;
         }
         default: {
+          const response = await Movie.findAll({
+            attributes: ['movieId', 'image_url', 'title', 'created_at'],
+          });
+          const data = response.map((movie) => movie.dataValues);
+          res.status(200).json(data);
         }
       }
-
-      const data = response.map((movie) => movie.dataValues);
-      res.status(200).json(data);
     } catch (err) {
       console.log(err.message);
     }
