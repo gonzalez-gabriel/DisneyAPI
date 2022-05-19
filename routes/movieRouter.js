@@ -1,10 +1,10 @@
 const { Router } = require('express');
 const movieController = require('../controllers/movieController');
 const validator = require('express-joi-validation').createValidator();
-// const queryValidator = require('../validations/queryValidator');
 const {
   bodyValidator,
   queryValidator,
+  idValidator,
 } = require('../validations/movieValidations');
 
 const routes = (Movie) => {
@@ -24,9 +24,9 @@ const routes = (Movie) => {
 
   movieRouter
     .route('/movies/:id')
-    .put(putMovieById)
-    .delete(deleteMovieById)
-    .get(movieDetailsById);
+    .put(validator.params(idValidator), putMovieById)
+    .delete(validator.params(idValidator), deleteMovieById)
+    .get(validator.params(idValidator), movieDetailsById);
 
   return movieRouter;
 };

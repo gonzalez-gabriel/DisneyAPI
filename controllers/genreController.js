@@ -18,7 +18,7 @@ const genreController = (Genre) => {
       const data = response.map((genre) => genre.dataValues);
       res.status(200).json(data);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
   //POST GENRE
@@ -37,7 +37,7 @@ const genreController = (Genre) => {
       });
       res.status(200).json(response);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
   //PUT GENRE
@@ -49,7 +49,7 @@ const genreController = (Genre) => {
       });
       res.status(200).json(response);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
   //DELETE GENRE
@@ -59,7 +59,7 @@ const genreController = (Genre) => {
       const response = await Genre.destroy({ where: { genreId: params.id } });
       res.status(200).json(response);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
 

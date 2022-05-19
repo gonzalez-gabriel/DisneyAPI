@@ -7,7 +7,7 @@ const userController = (User) => {
       const newUser = await User.findAll();
       res.status(200).json(newUser);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
 
@@ -21,10 +21,9 @@ const userController = (User) => {
         email,
         password: await bcrypt.hash(password, 2),
       });
-      // console.log(newUser.password);
       res.status(200).json(newUser);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
 
@@ -42,7 +41,7 @@ const userController = (User) => {
       const token = generateToken(user);
       res.status(200).json(token);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
 

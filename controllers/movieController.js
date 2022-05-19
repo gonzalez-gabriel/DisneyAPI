@@ -53,7 +53,7 @@ const movieController = (Movie) => {
         }
       }
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
   //POST MOVIES
@@ -78,7 +78,7 @@ const movieController = (Movie) => {
       });
       res.status(200).json(response);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
   //PUT MOVIE
@@ -116,7 +116,7 @@ const movieController = (Movie) => {
       });
       res.status(200).json(response);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
   //DELETE MOVIE
@@ -126,7 +126,7 @@ const movieController = (Movie) => {
       const response = await Movie.destroy({ where: { movieId: params.id } });
       res.status(200).json(response);
     } catch (err) {
-      console.log(err.message);
+      res.status(500).json(err.message);
     }
   };
 

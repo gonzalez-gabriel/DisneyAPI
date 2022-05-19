@@ -20,12 +20,12 @@ const routes = (Character) => {
   characterRouter
     .route('/characters')
     .post(validator.body(bodyValidator), postCharacter)
-    .get(getCharacters);
+    .get(validator.query(queryValidator), getCharacters);
 
   characterRouter
     .route('/characters/:id')
-    .put(putCharacterById)
-    .delete(deleteCharacterById)
+    .put(validator.params(idValidator), putCharacterById)
+    .delete(validator.params(idValidator), deleteCharacterById)
     .get(validator.params(idValidator), characterDetailsById);
 
   return characterRouter;
