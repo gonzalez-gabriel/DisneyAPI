@@ -61,24 +61,28 @@ const movieController = (Movie) => {
     const { body } = req;
     const { characters, genres } = body;
     try {
-      const response = await Movie.create(body);
+      const newMovie = await Movie.create(body);
 
       const charactersDB = await Character.findAll();
       const genresDB = await Genre.findAll();
 
       charactersDB.forEach(async (character) => {
         if (characters.includes(character.dataValues.name)) {
-          await response.addCharacter(character);
+          await newMovie.addCharacter(character);
         }
       });
       genresDB.forEach(async (genre) => {
         if (genres.includes(genre.dataValues.name)) {
-          await response.addGenre(genre);
+          await newMovie.addGenre(genre);
         }
       });
-      res.status(200).json(response);
+      res.status(201).json(newMovie);
     } catch (err) {
-      res.status(500).json(err.message);
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        res.status(400).json('The title must be unique');
+      } else {
+        res.status(500).json(err.message);
+      }
     }
   };
   //PUT MOVIE
@@ -86,9 +90,6 @@ const movieController = (Movie) => {
     const { params, body } = req;
     const { image_url, title, created_at, rate, characters, genres } = body;
     try {
-      // const response = await Movie.update(body, {
-      //   where: { movieId: params.id },
-      // });
       const movieToUpdate = await Movie.findOne({
         where: { movieId: params.id },
       });
@@ -99,22 +100,29 @@ const movieController = (Movie) => {
         movieToUpdate.rate = rate;
       }
 
-      movieToUpdate.setCharacters([]);
-      movieToUpdate.setGenres([]);
+      await movieToUpdate.setCharacters([]);
 
       const charactersDB = await Character.findAll();
-      const genresDB = await Genre.findAll();
+
       charactersDB.forEach(async (character) => {
         if (characters.includes(character.dataValues.name)) {
-          await response.addCharacter(character);
+          await movieToUpdate.addCharacter(character);
         }
       });
+      await movieToUpdate.setGenres([]);
+
+      const genresDB = await Genre.findAll();
       genresDB.forEach(async (genre) => {
         if (genres.includes(genre.dataValues.name)) {
-          await response.addGenre(genre);
+          await movieToUpdate.addGenre(genre);
         }
       });
-      res.status(200).json(response);
+      if (await Movie.findOne({ where: { title } })) {
+        throw new Error('The title already exist');
+      }
+      movieToUpdate.save();
+
+      res.status(201).json('Movie updated');
     } catch (err) {
       res.status(500).json(err.message);
     }
@@ -134,7 +142,7 @@ const movieController = (Movie) => {
   const movieDetailsById = async (req, res) => {
     const { params } = req;
     try {
-      const response = await Movie.findOne({
+      const movieDetails = await Movie.findOne({
         where: { movieId: params.id },
         include: [
           {
@@ -153,7 +161,7 @@ const movieController = (Movie) => {
           },
         ],
       });
-      res.status(200).json(response);
+      res.status(200).json(movieDetails);
     } catch (err) {
       res.status(500).json(err.message);
     }

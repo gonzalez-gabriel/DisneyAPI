@@ -41,7 +41,13 @@ app.all(
     path: ['/auth/login', '/auth/register'],
   })
 );
-
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json('Invalid credentials');
+  } else {
+    next(err);
+  }
+});
 // ROUTES
 app.use('/', characterRouter, genreRouter, movieRouter, userRouter);
 

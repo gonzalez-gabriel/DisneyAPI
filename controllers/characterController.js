@@ -1,5 +1,4 @@
 const Movie = require('../models/MovieModel');
-const { Op } = require('sequelize');
 
 const characterController = (Character) => {
   //GET CHARACTERS
@@ -48,7 +47,7 @@ const characterController = (Character) => {
         }
       }
     } catch (err) {
-      res.status(500).json(err.message);
+      res.status(500).json(err.name);
     }
   };
   //POST CHARACTER
@@ -56,18 +55,22 @@ const characterController = (Character) => {
     const { body } = req;
     const { movies } = body;
     try {
-      const response = await Character.create(body);
+      const newCharacter = await Character.create(body);
 
       const moviesDB = await Movie.findAll();
 
       moviesDB.forEach(async (movie) => {
         if (movies.includes(movie.dataValues.title)) {
-          await response.addMovie(movie);
+          await newCharacter.addMovie(movie);
         }
       });
-      res.status(200).json(response);
+      res.status(201).json(newCharacter);
     } catch (err) {
-      res.status(500).json(err.message);
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        res.status(400).json('The character name must be unique');
+      } else {
+        res.status(500).json(err.message);
+      }
     }
   };
   //PUT CHARACTER
@@ -95,11 +98,12 @@ const characterController = (Character) => {
           await characterToUpdate.addMovie(movie);
         }
       });
+      if (await Character.findOne({ where: { name } })) {
+        throw new Error('The character already exist');
+      }
       characterToUpdate.save();
-      // const response = await Character.update(body, {
-      //   where: { characterId: params.id },
-      // });
-      res.status(200).json('Character updated');
+
+      res.status(201).json('Character updated');
     } catch (err) {
       res.status(500).json(err.message);
     }
@@ -120,7 +124,7 @@ const characterController = (Character) => {
   const characterDetailsById = async (req, res) => {
     const { params } = req;
     try {
-      const response = await Character.findAll({
+      const characterDetails = await Character.findOne({
         where: { characterId: params.id },
         include: [
           {
@@ -132,7 +136,7 @@ const characterController = (Character) => {
           },
         ],
       });
-      res.status(200).json(response);
+      res.status(200).json(characterDetails);
     } catch (err) {
       res.status(500).json(err.message);
     }

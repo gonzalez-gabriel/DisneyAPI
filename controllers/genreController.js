@@ -26,18 +26,22 @@ const genreController = (Genre) => {
     const { body } = req;
     const { movies } = body;
     try {
-      const response = await Genre.create(body);
+      const newGenre = await Genre.create(body);
 
       const moviesDB = await Movie.findAll();
 
       moviesDB.forEach(async (movie) => {
         if (movies.includes(movie.dataValues.title)) {
-          await response.addMovie(movie);
+          await newGenre.addMovie(movie);
         }
       });
-      res.status(200).json(response);
+      res.status(201).json(newGenre);
     } catch (err) {
-      res.status(500).json(err.message);
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        res.status(400).json('The genre must be unique');
+      } else {
+        res.status(500).json(err.message);
+      }
     }
   };
   //PUT GENRE
@@ -47,7 +51,7 @@ const genreController = (Genre) => {
       const response = await Genre.update(body, {
         where: { genreId: params.id },
       });
-      res.status(200).json(response);
+      res.status(201).json(response);
     } catch (err) {
       res.status(500).json(err.message);
     }
