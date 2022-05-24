@@ -77,7 +77,7 @@ const movieController = (Movie) => {
           await newMovie.addGenre(genre);
         }
       });
-      res.status(201).json(newMovie);
+      res.status(201).json('Movie created');
     } catch (err) {
       if (err.name === 'SequelizeUniqueConstraintError') {
         res.status(400).json('The title must be unique');
@@ -139,7 +139,7 @@ const movieController = (Movie) => {
     const { params } = req;
     try {
       const response = await Movie.destroy({ where: { movieId: params.id } });
-      res.status(200).json(response);
+      res.status(200).json(`${response} movie has been deleted`);
     } catch (err) {
       res.status(500).json(err.message);
     }

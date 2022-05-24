@@ -1,4 +1,6 @@
 const Movie = require('../models/MovieModel');
+const { Op } = require('sequelize');
+
 const genreController = (Genre) => {
   //GET GENRES
   const getGenres = async (req, res) => {
@@ -35,7 +37,7 @@ const genreController = (Genre) => {
           await newGenre.addMovie(movie);
         }
       });
-      res.status(201).json(newGenre);
+      res.status(201).json('Genre created');
     } catch (err) {
       if (err.name === 'SequelizeUniqueConstraintError') {
         res.status(400).json('The genre must be unique');
@@ -47,11 +49,39 @@ const genreController = (Genre) => {
   //PUT GENRE
   const putGenreById = async (req, res) => {
     const { params, body } = req;
+    const { movies, image_url, name } = body;
+
     try {
-      const response = await Genre.update(body, {
+      const genreToUpdate = await Genre.findOne({
         where: { genreId: params.id },
       });
-      res.status(201).json(response);
+
+      if (genreToUpdate) {
+        genreToUpdate.image_url = image_url;
+        genreToUpdate.name = name;
+      }
+
+      await genreToUpdate.setMovies([]);
+
+      const moviesDB = await Movie.findAll();
+
+      moviesDB.forEach(async (movie) => {
+        if (movies.includes(movie.dataValues.title))
+          await genreToUpdate.addMovie(movie);
+      });
+
+      if (
+        await Genre.findOne({
+          where: {
+            [Op.and]: [{ name }, { genreId: { [Op.ne]: params.id } }],
+          },
+        })
+      ) {
+        throw new Error('The genre already exist');
+      }
+      genreToUpdate.save();
+
+      res.status(200).send('Genre updated');
     } catch (err) {
       res.status(500).json(err.message);
     }
@@ -61,7 +91,7 @@ const genreController = (Genre) => {
     const { params } = req;
     try {
       const response = await Genre.destroy({ where: { genreId: params.id } });
-      res.status(200).json(response);
+      res.status(200).json(`${response} genre has been deleted`);
     } catch (err) {
       res.status(500).json(err.message);
     }

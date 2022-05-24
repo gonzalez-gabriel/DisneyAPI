@@ -65,7 +65,7 @@ const characterController = (Character) => {
           await newCharacter.addMovie(movie);
         }
       });
-      res.status(201).json(newCharacter);
+      res.status(201).json('Character created');
     } catch (err) {
       if (err.name === 'SequelizeUniqueConstraintError') {
         res.status(400).json('The character name must be unique');
@@ -122,7 +122,7 @@ const characterController = (Character) => {
       const response = await Character.destroy({
         where: { characterId: params.id },
       });
-      res.status(200).json(response);
+      res.status(200).json(`${response} character has been deleted`);
     } catch (err) {
       res.status(500).json(err.message);
     }
