@@ -3,16 +3,6 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
 const userController = (User) => {
-  //GET USERS
-  const getUsers = async (req, res) => {
-    try {
-      const usersDB = await User.findAll();
-      res.status(200).json(usersDB);
-    } catch (err) {
-      res.status(500).json(err.message);
-    }
-  };
-
   //REGISTER
   const postUser = async (req, res) => {
     const { name, username, email, password } = req.body;
@@ -107,6 +97,6 @@ const userController = (User) => {
     });
   };
 
-  return { postUser, login, getUsers };
+  return { postUser, login };
 };
 module.exports = userController;

@@ -9,12 +9,12 @@ const {
 const routes = (User) => {
   const userRouter = Router();
 
-  const { postUser, login, getUsers } = userController(User);
+  const { postUser, login } = userController(User);
   userRouter
     .route('/auth/register')
     .post(validator.body(registerValidator), postUser);
   userRouter.route('/auth/login').post(validator.body(loginValidator), login);
-  userRouter.route('/auth').get(getUsers);
+
   return userRouter;
 };
 
