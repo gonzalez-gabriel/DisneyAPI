@@ -24,7 +24,11 @@ const routes = (Movie) => {
 
   movieRouter
     .route('/movies/:id')
-    .put(validator.params(idValidator), putMovieById)
+    .put(
+      validator.params(idValidator),
+      validator.body(bodyValidator),
+      putMovieById
+    )
     .delete(validator.params(idValidator), deleteMovieById)
     .get(validator.params(idValidator), movieDetailsById);
 

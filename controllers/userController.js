@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
 const userController = (User) => {
+  //GET USERS
   const getUsers = async (req, res) => {
     try {
       const usersDB = await User.findAll();
@@ -87,7 +88,7 @@ const userController = (User) => {
         user === null ||
         !(await bcrypt.compare(body.password, user.password))
       ) {
-        return res.status(403).send('Unauthorized');
+        return res.status(401).send('Unauthorized');
       }
       const token = generateToken(user);
       res.status(200).json(token);
@@ -109,8 +110,3 @@ const userController = (User) => {
   return { postUser, login, getUsers };
 };
 module.exports = userController;
-// 401: unauthorized
-//403:forbidden prohibido
-//500:genérico, condicion inesperada que le impide completar la peticion
-//200:todo está bien
-//201:put y post

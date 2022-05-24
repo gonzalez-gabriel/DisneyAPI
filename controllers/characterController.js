@@ -1,4 +1,5 @@
 const Movie = require('../models/MovieModel');
+const { Op } = require('sequelize');
 
 const characterController = (Character) => {
   //GET CHARACTERS
@@ -98,7 +99,13 @@ const characterController = (Character) => {
           await characterToUpdate.addMovie(movie);
         }
       });
-      if (await Character.findOne({ where: { name } })) {
+      if (
+        await Character.findOne({
+          where: {
+            [Op.and]: [{ name }, { characterId: { [Op.ne]: params.id } }],
+          },
+        })
+      ) {
         throw new Error('The character already exist');
       }
       characterToUpdate.save();
@@ -120,7 +127,7 @@ const characterController = (Character) => {
       res.status(500).json(err.message);
     }
   };
-
+  //CHARACTER DETAILS BY ID
   const characterDetailsById = async (req, res) => {
     const { params } = req;
     try {

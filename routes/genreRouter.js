@@ -18,7 +18,11 @@ const routes = (Genre) => {
 
   genreRouter
     .route('/genres/:id')
-    .put(validator.params(idValidator), putGenreById)
+    .put(
+      validator.params(idValidator),
+      validator.body(bodyValidator),
+      putGenreById
+    )
     .delete(validator.params(idValidator), deleteGenreById);
 
   return genreRouter;

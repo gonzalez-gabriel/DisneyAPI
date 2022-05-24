@@ -28,10 +28,5 @@ Movie.belongsToMany(Genre, {
   as: 'genres',
   foreignKey: 'movieId',
 });
-// const routes = () => {
-//   // characterRouter(Character);
-//   // movieRouter(Movie);
-//   // genreRouter(Genre);
-//   return { characterRouter, movieRouter, genreRouter };
-// };
+
 module.exports = { characterRouter, genreRouter, movieRouter, userRouter };

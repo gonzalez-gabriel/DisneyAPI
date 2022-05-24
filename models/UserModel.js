@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
-// module.exports = (sequelize) => {
 const User = sequelize.define(
   'user',
   {
@@ -33,7 +32,5 @@ const User = sequelize.define(
     timestamps: false,
   }
 );
-// return character;
-// };
 
 module.exports = User;

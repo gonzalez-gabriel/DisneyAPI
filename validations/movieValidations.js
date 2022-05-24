@@ -3,7 +3,7 @@ const Joi = require('joi');
 const bodyValidator = Joi.object({
   image_url: Joi.string().required(),
   title: Joi.string().required(),
-  rate: Joi.number().required(),
+  rate: Joi.number().integer().min(1).max(5).required(),
   created_at: Joi.date().required(),
   characters: Joi.array().items(Joi.string().required()).required(),
   genres: Joi.array().items(Joi.string().required()).required(),

@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
 
-// const model = (sequelize) => {
 const Movie = sequelize.define(
   'movie',
   {
@@ -32,7 +31,5 @@ const Movie = sequelize.define(
     timestamps: false,
   }
 );
-// return movie;
-// };
 
 module.exports = Movie;

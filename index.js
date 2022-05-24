@@ -12,14 +12,7 @@ const {
   movieRouter,
   userRouter,
 } = require('./routes');
-// const Character = require('./models/CharacterModel');
-// const Genre = require('./models/GenreModel');
-// const Movie = require('./models/MovieModel');
-// const characterRouter = require('./routes/characterRouter');
-// const genreRouter = require('./routes/genreRouter');
-// const movieRouter = require('./routes/movieRouter');
 // MIDDLEWARE REQUIRE
-// const expressJwt = require('express-jwt');
 const { expressjwt: jwt } = require('express-jwt');
 // CONFIGURATIONS
 const SERVER_PORT = process.env.SERVER_PORT;
@@ -55,8 +48,7 @@ app.use('/', characterRouter, genreRouter, movieRouter, userRouter);
 app.listen(SERVER_PORT, () => console.log(`listening on port ${SERVER_PORT}`));
 (async () => {
   try {
-    await sequelize.sync({ force: true });
-    // await sequelize.sync();
+    await sequelize.sync();
   } catch (err) {
     console.error('Unable to connect to the database:', err);
   }

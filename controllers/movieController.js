@@ -1,5 +1,6 @@
 const Character = require('../models/CharacterModel');
 const Genre = require('../models/GenreModel');
+const { Op } = require('sequelize');
 
 const movieController = (Movie) => {
   //GET MOVIES
@@ -117,7 +118,13 @@ const movieController = (Movie) => {
           await movieToUpdate.addGenre(genre);
         }
       });
-      if (await Movie.findOne({ where: { title } })) {
+      if (
+        await Movie.findOne({
+          where: {
+            [Op.and]: [{ title }, { movieId: { [Op.ne]: params.id } }],
+          },
+        })
+      ) {
         throw new Error('The title already exist');
       }
       movieToUpdate.save();
@@ -138,7 +145,7 @@ const movieController = (Movie) => {
     }
   };
 
-  //MOVIE DETAILS WITH CHARACTERS
+  //MOVIE DETAILS BY ID
   const movieDetailsById = async (req, res) => {
     const { params } = req;
     try {

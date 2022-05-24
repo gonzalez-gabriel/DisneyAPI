@@ -1,6 +1,6 @@
 const Movie = require('../models/MovieModel');
 const genreController = (Genre) => {
-  //GET genreS
+  //GET GENRES
   const getGenres = async (req, res) => {
     try {
       const response = await Genre.findAll({

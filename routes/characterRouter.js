@@ -24,7 +24,11 @@ const routes = (Character) => {
 
   characterRouter
     .route('/characters/:id')
-    .put(validator.params(idValidator), putCharacterById)
+    .put(
+      validator.params(idValidator),
+      validator.body(bodyValidator),
+      putCharacterById
+    )
     .delete(validator.params(idValidator), deleteCharacterById)
     .get(validator.params(idValidator), characterDetailsById);
 
